@@ -52,9 +52,7 @@ class ScrapBooker:
             return None
         if not isinstance(array, np.ndarray) or n > array.shape[axis]:
             return None
-        print(f'{n = }, {np.s_[0:-1:3] = }, {axis = }')
-        print(f'{array[np.s_[0::n]] = }')
-        return np.delete(array, np.s_[::n], axis=axis)
+        return np.delete(array, np.s_[n - 1::n], axis=not axis)
 
     def juxtapose(self, array: np.ndarray, n: int, axis: int) -> np.ndarray | None:
         """
