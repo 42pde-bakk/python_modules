@@ -4,7 +4,7 @@ PYTHON_VERSION="3.10"
 REQUIREMENTS="jupyter numpy pandas pycodestyle"
 
 function which_dl {
-    # If operating system name contains Darwnin: MacOS. Else Linux
+    # If operating system name contains Darwin: MacOS. Else Linux
     if uname -s | grep -iqF Darwin; then
         echo "Miniconda3-latest-MacOSX-x86_64.sh"
     else
@@ -22,20 +22,20 @@ function which_shell {
 }
 
 function when_conda_exist {
-    # check and install 42AI environement
+    # check and install 42AI environment
     printf "Checking 42AI-$USER environment: "
     if conda info --envs | grep -iqF 42AI-"$USER"; then
         printf "\e[33mDONE\e[0m\n"
     else
         printf "\e[31mKO\e[0m\n"
-        printf "\e[33mCreating 42AI environnment:\e[0m\n"
+        printf "\e[33mCreating 42AI environment:\e[0m\n"
         conda update -n base -c defaults conda -y
         conda create --name 42AI-"$USER" python="$PYTHON_VERSION" $REQUIREMENTS -y
     fi
 }
 
 function set_conda {
-    MINICONDA_PATH="$HOME/goinfre/miniconda3"
+    MINICONDA_PATH="/sgoinfre/goinfre/Perso/pde-bakk/miniconda3"
     CONDA=$MINICONDA_PATH"/bin/conda"
     PYTHON_PATH=$(which python)
     SCRIPT=$(which_dl)
@@ -51,7 +51,7 @@ function set_conda {
     fi
         printf "\e[31mKO\e[0m\n"
     if [ ! -f $DL_LOCATION"$SCRIPT" ]; then
-        printf "\e[33mDonwloading installer:\e[0m\n"
+        printf "\e[33mDownloading installer:\e[0m\n"
         cd $DL_LOCATION || exit 1
         curl -LO "$DL_LINK"
         cd - || exit 1
@@ -61,7 +61,7 @@ function set_conda {
     printf "\e[33mConda initial setup:\e[0m\n"
     $CONDA init "$MY_SHELL"
     $CONDA config --set auto_activate_base false
-    printf "\e[33mCreating 42AI-$USER environnment:\e[0m\n"
+    printf "\e[33mCreating 42AI-$USER environment:\e[0m\n"
     $CONDA update -n base -c defaults conda -y
     $CONDA create --name 42AI-"$USER" python="$PYTHON_VERSION" $REQUIREMENTS -y
     printf "\e[33mLaunch the following command or restart your shell:\e[0m\n"
