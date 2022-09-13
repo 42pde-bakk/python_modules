@@ -31,7 +31,7 @@ class ScrapBooker:
         new_arr = array[x1:x2, y1:y2]
         return new_arr
 
-    def thin(self):
+    def thin(self, array: np.ndarray, n: int, axis: int) -> np.ndarray | None:
         """
         Deletes every n-th line pixels along the specified axis (0: Horizontal, 1: Vertical)
         Args:
@@ -42,15 +42,21 @@ class ScrapBooker:
         axis: positive non null integer.
         Return:
         -------
-        new_arr: thined numpy.ndarray.
-        None (if combinaison of parameters not compatible).
+        new_arr: thinned numpy.ndarray.
+        None (if combination of parameters not compatible).
         Raise:
         ------
         This function should not raise any Exception.
         """
-        pass
+        if not isinstance(n, int) or not isinstance(axis, int) or not (axis == 0 or axis == 1):
+            return None
+        if not isinstance(array, np.ndarray) or n > array.shape[axis]:
+            return None
+        print(f'{n = }, {np.s_[0:-1:3] = }, {axis = }')
+        print(f'{array[np.s_[0::n]] = }')
+        return np.delete(array, np.s_[::n], axis=axis)
 
-    def juxtapose(self):
+    def juxtapose(self, array: np.ndarray, n: int, axis: int) -> np.ndarray | None:
         """
         Juxtaposes n copies of the image along the specified axis.
         Args:
@@ -66,9 +72,16 @@ class ScrapBooker:
         -------
         This function should not raise any Exception.
         """
-        pass
+        if not isinstance(array, np.ndarray) or not isinstance(n, int) or not isinstance(axis, int):
+            return None
+        if n <= 0 or not (0 <= axis <= 1):
+            return None
+        if axis == 0:
+            return np.tile(array, (n, 1))
+        else:
+            return np.tile(array, (1, n))
 
-    def mosaic(self):
+    def mosaic(self, array: np.ndarray, dim: tuple[int, int]) -> np.ndarray | None:
         """
         Makes a grid with multiple copies of the array. The dim argument specifies
         the number of repetition along each dimensions.
@@ -84,4 +97,6 @@ class ScrapBooker:
         -------
         This function should not raise any Exception.
         """
-        pass
+        if not isinstance(array, np.ndarray) or not isinstance(dim, int) or any(not isinstance(x, int) for x in dim):
+            return None
+        return np.tile(array, dim)
