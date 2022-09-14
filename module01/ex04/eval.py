@@ -1,16 +1,23 @@
 class Evaluator:
-
     @staticmethod
     def zip_evaluate(coefs: list, words: list):
-        if len(coefs) != len(words):
+        if not Evaluator.__parameters_are_valid(coefs, words):
             return -1
         return sum(coef * len(word) for (coef, word) in zip(coefs, words))
 
     @staticmethod
     def enumerate_evaluate(coefs: list, words: list):
-        if len(coefs) != len(words):
+        if not Evaluator.__parameters_are_valid(coefs, words):
             return -1
         return sum(coef * len(words[i]) for (i, coef) in enumerate(coefs))
+
+    @staticmethod
+    def __parameters_are_valid(coefs: list, words: list) -> bool:
+        if not all(isinstance(x, list) for x in (coefs, words)) or len(coefs) != len(words):
+            return False
+        if not all(isinstance(w, str) for w in words) or not all(isinstance(c, (int, float)) for c in coefs):
+            return False
+        return True
 
 
 def main():
