@@ -1,7 +1,16 @@
 import numpy as np
 
 
+RED = 0
+GREEN = 1
+BLUE = 2
+
+
 class ColorFilter:
+    """Different libs represent RGB values differently
+    Here, I assume RGB is represented as 3 uint8 values:
+    [0, 12, 254] for example
+    """
     def invert(self, array: np.ndarray) -> np.ndarray | None:
         """
         Inverts the color of the image received as a numpy array.
@@ -19,6 +28,9 @@ class ColorFilter:
         new_arr = array.copy()
 
         new_arr[:, :, :3] = 255 - new_arr[:, :, :3]
+        # Not doing
+        # return 255 - new_arr
+        # Because I want the possible alpha values to remain the same
         return new_arr
 
     def to_blue(self, array: np.ndarray) -> np.ndarray | None:
@@ -36,9 +48,8 @@ class ColorFilter:
         This function should not raise any Exception.
         """
         new_arr = array.copy()
-        for y, row in enumerate(array):
-            for x, rgb in enumerate(row):
-                new_arr[y][x][:2] = 0
+        new_arr[:, :, RED] = 0
+        new_arr[:, :, GREEN] = 0
         return new_arr
 
     def to_green(self, array: np.ndarray) -> np.ndarray | None:
@@ -56,10 +67,8 @@ class ColorFilter:
         This function should not raise any Exception.
         """
         new_arr = array.copy()
-        for y, row in enumerate(array):
-            for x, rgb in enumerate(row):
-                new_arr[y][x][0] = 0
-                new_arr[y][x][2] = 0
+        new_arr[:, :, RED] = 0
+        new_arr[:, :, BLUE] = 0
         return new_arr
 
     def to_red(self, array: np.ndarray) -> np.ndarray | None:
@@ -77,9 +86,8 @@ class ColorFilter:
         This function should not raise any Exception.
         """
         new_arr = array.copy()
-        for y, row in enumerate(array):
-            for x, rgb in enumerate(row):
-                new_arr[y][x][1:3] = 0
+        new_arr[:, :, GREEN] = 0
+        new_arr[:, :, BLUE] = 0
         return new_arr
 
     def to_celluloid(self, array: np.ndarray) -> np.ndarray | None:
@@ -101,7 +109,15 @@ class ColorFilter:
         -------
         This function should not raise any Exception.
         """
-        pass
+        if not isinstance(array, np.ndarray):
+            return None
+        new_array = array.copy()
+        for i in range(3):
+            new_array[new_array[:, :, i] <= 64, i] = 0
+            new_array[((new_array > 64) & (new_array <= 128))[:, :, i], i] = 64
+            new_array[((new_array > 128) & (new_array <= 192))[:, :, i], i] = 128
+            new_array[new_array[:, :, i] > 192, i] = 192
+        return new_array
 
     def to_grayscale(self, array: np.ndarray, Filter, **kwargs) -> np.ndarray | None:
         """
@@ -122,16 +138,22 @@ class ColorFilter:
         -------
         This function should not raise any Exception.
         """
-        new_array = array.copy()
-        for y, row in enumerate(new_array):
-            for x, item in enumerate(row):
-                if Filter == 'mean' or Filter == 'm':
-                    avg = sum(item[:3]) / 3
-                    new_array[0] = avg
-                    new_array[1] = avg
-                    new_array[2] = avg
-                elif Filter == 'weight' or Filter == 'w':
-                    new_array[y][x][0] *= kwargs['weights'][0]
-                    new_array[y][x][1] *= kwargs['weights'][1]
-                    new_array[y][x][2] *= kwargs['weights'][2]
+        if not isinstance(array, np.ndarray) or not isinstance(Filter, str):
+            return None
+        new_array = np.array(array)
+        if Filter in ('mean', 'm'):
+            for row in new_array:
+                for rgb in row:
+                    avg = sum(rgb[0:3]) / 3  # Not using the alpha value
+                    rgb[0:3] = avg
+        elif Filter in ('weight', 'w'):
+            if 'weights' not in kwargs:
+                return None
+            weights = np.array(kwargs['weights'])
+            for row in new_array:
+                for rgb in row:
+                    avg = sum(rgb[0:3] * weights) / 3
+                    rgb[0:3] = avg
+        else:
+            return None
         return new_array
