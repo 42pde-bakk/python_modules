@@ -7,8 +7,9 @@ def ft_map(function_to_apply, iterable):
     An iterable.
     None if the iterable can not be used by the function.
     """
-    if not function_to_apply or not iterable:
-        return None
+    # https://stackoverflow.com/questions/624926/how-do-i-detect-whether-a-python-variable-is-a-function
+    if not callable(function_to_apply):
+        raise RuntimeError("function not callable")
     for item in iterable:
         yield function_to_apply(item)
 

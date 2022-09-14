@@ -7,8 +7,9 @@ def ft_filter(function_to_apply, iterable):
     An iterable.
     None if the iterable can not be used by the function.
     """
-    if function_to_apply is None or iterable is None:
-        return None
+    # https://stackoverflow.com/questions/624926/how-do-i-detect-whether-a-python-variable-is-a-function
+    if not callable(function_to_apply):
+        raise RuntimeError("function not callable")
     for item in iterable:
         if function_to_apply(item):
             yield item

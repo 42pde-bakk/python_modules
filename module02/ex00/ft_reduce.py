@@ -7,8 +7,9 @@ def ft_reduce(function_to_apply, iterable):
     A value, of same type of elements in the iterable parameter.
     None if the iterable can not be used by the function.
     """
-    if function_to_apply is None or iterable is None:
-        return None
+    # https://stackoverflow.com/questions/624926/how-do-i-detect-whether-a-python-variable-is-a-function
+    if not callable(function_to_apply):
+        raise RuntimeError("function not callable")
     out = iterable[0]
     for item in iterable[1:]:
         out = function_to_apply(out, item)
