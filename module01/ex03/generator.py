@@ -15,13 +15,13 @@ def randomize_array(arr: list[str]) -> list[str]:
     return new_arr
 
 
-def generator(s: str, sep=' ', option=None) -> str:
+def generator(s: str, sep=' ', option=None) -> str | None:
     """Splits the text according to sep value and yield the substrings.
     option precise if an action is performed to the substrings before it is yielded.
     """
     if not isinstance(s, str):
-        print(f'ERROR\n', file=sys.stderr)
-        return
+        print(f'ERROR', file=sys.stderr)
+        return None
     arr = s.split(sep)
     if option:
         if option == 'shuffle':
@@ -31,7 +31,7 @@ def generator(s: str, sep=' ', option=None) -> str:
         elif option == 'ordered':
             arr.sort()
         else:
-            print(f'ERROR\n', file=sys.stderr)
+            print(f'ERROR', file=sys.stderr)
             return
     for item in arr:
         yield item
@@ -39,5 +39,5 @@ def generator(s: str, sep=' ', option=None) -> str:
 
 if __name__ == '__main__':
     for arg in sys.argv[1:]:
-        for word in generator(arg, ' ', 'unique'):
-            print(word)
+        for word in generator(arg, ' '):
+            print(f'{word = }')
