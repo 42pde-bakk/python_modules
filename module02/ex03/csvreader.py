@@ -29,7 +29,8 @@ class CsvReader:
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        self.f.close()
+        if self.f is not None:
+            self.f.close()
 
     def getdata(self):
         return self.data
