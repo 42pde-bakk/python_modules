@@ -94,6 +94,8 @@ class Bank:
         acc_dest = self.find_account(dest)
         if acc_origin is None or acc_origin.is_corrupted() or acc_dest is None or acc_dest.is_corrupted():
             return False
+        if acc_origin.value < amount:
+            return False
         acc_origin.value -= amount
         acc_dest.value += amount
         return True
@@ -105,8 +107,10 @@ class Bank:
         """
         account = self.find_account(name)
         if account is None:
+            print('cant find account')
             return False
         if not account.is_corrupted():
+            print('its not corrupted tho?')
             return True
         if 'id' not in dir(account) or not isinstance(account.id, int):
             setattr(account, 'id', Account.ID_COUNT)
@@ -121,6 +125,7 @@ class Bank:
             setattr(account, 'zip', 75017)
         if len(dir(account)) % 2 == 0:
             setattr(account, 'super_secret_dummy_var', '#Vela')
+        print(f'{account.is_corrupted() = }')
         return not account.is_corrupted()
 
 
