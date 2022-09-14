@@ -3,22 +3,34 @@ import copy
 
 class Vector:
     def __init__(self, arg):
+        self.values = []
+        self.shape = 0, 0
         if arg is None:
-            self.values = []
-            self.shape = 0, 0
+            return
         elif isinstance(arg, int):
+            if arg <= 0:
+                print('Error. Please supply a positive integer instead')
+                return
             self.values = [[float(i)] for i in range(arg)]
             self.shape = arg, 1
         elif isinstance(arg, list):
+            if any(not isinstance(x, type(arg[0])) for x in arg):
+                print('Error. elements have differing types')
+                return
             self.values = copy.deepcopy(arg)
+            if any(not isinstance(x, list) for x in self.values):
+                # 1D vector
+                self.shape = len(self.values)
+                return
             self.shape = len(arg), len(arg[0])
             assert all(len(elem) == len(arg[0]) for elem in arg)
         elif isinstance(arg, Vector):
             self.values = copy.deepcopy(arg.values)
             self.shape = copy.deepcopy(arg.shape)
         elif isinstance(arg, tuple):
-            assert len(arg) == 2 and arg[0] < arg[1]
-            print('tuple')
+            if len(arg) != 2 or arg[0] >= arg[1] or not all(isinstance(x, int) for x in arg):
+                print('Error. The second int in the tuple has to be larger than the first int.')
+                return
             self.values = [[float(i)] for i in range(arg[0], arg[1])]
             self.shape = len(self.values[0]), 1
         elif isinstance(arg, range):
@@ -56,6 +68,9 @@ class Vector:
 
     def __mul__(self, mult):
         out = Vector(self)
+        if not isinstance(mult, (float, int)):
+            print('Item to multiply by has to of type int or float.')
+            return None
         if self.shape[0] == 1:
             out.values = [[mult * x for x in self.values[0]]]
         elif self.shape[1] == 1:
@@ -86,7 +101,8 @@ class Vector:
         if not isinstance(other, Vector):
             return NotImplemented
         if self.shape != other.shape:
-            raise ValueError
+            print('Error. Trying to add two vectors with differing shapes!')
+            return None
         if self.shape == (0, 0):
             return Vector(None)
         out = Vector(None)
@@ -94,7 +110,7 @@ class Vector:
         if self.shape[0] == 1:
             out.values = [[a + b for (a, b) in zip(self.values[0], other.values[0])]]
         elif self.shape[1] == 1:
-            out.values = [[a + b] for (a, b) in zip(self.values, other.values)]
+            out.values = [[a[0] + b[0]] for (a, b) in zip(self.values, other.values)]
         else:
             return NotImplemented
         return out
