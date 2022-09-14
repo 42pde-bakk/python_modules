@@ -17,7 +17,7 @@ class Recipe:
         assert 1 <= self.cooking_lvl <= 5, "Cooking lvl has to be between 1 and 5"
         assert isinstance(self.cooking_time, int)
         assert self.cooking_time > 0
-        assert isinstance(self.ingredients, list)
+        assert isinstance(self.ingredients, list) and self.ingredients
         assert all(isinstance(ingr, str) for ingr in self.ingredients)
         assert isinstance(self.description, str)
         assert isinstance(self.recipe_type, str)
