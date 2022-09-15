@@ -2,6 +2,8 @@ import sys
 from csvreader import CsvReader
 import numpy as np
 import os
+from matplotlib import pyplot as plt
+from mpl_toolkits import mplot3d
 
 
 def calc_dist(a: np.ndarray, b: np.ndarray) -> float:
@@ -29,16 +31,11 @@ class KmeansClustering:
         """
         changes = False
         for i, x in enumerate(X):
-            print(x)
             centroids_dists = [calc_dist(x, centroid) for centroid in self.centroids]
-            print(f'{centroids_dists=}')
             min_index = centroids_dists.index(min(centroids_dists))
-            print(f'{min_index=}')
             if min_index != x[0]:
                 changes = True
-                print(f'changes!')
             x[0] = min_index
-            print(f'{x[0]=}')
         return changes
 
     def __get_avgs(self, X: np.ndarray, i: int) -> list:
@@ -51,15 +48,21 @@ class KmeansClustering:
         return values / count
 
     def __update_step(self, X: np.ndarray):
-        print(f'{X=}')
         for i, centroid in enumerate(self.centroids):
             avgs = self.__get_avgs(X, i)
-            print(f'{i=}, centroid={centroid}, {avgs=}')
             self.centroids[i] = avgs
 
     def display_centroids(self) -> None:
         for i, centroid in enumerate(self.centroids):
             print(f'centroid #{i} is located at {centroid[1:]}')
+
+    def get_citizens(self, X: np.ndarray) -> list[np.ndarray]:
+        lst = [np.array([[]], dtype=float) for _ in range(self.ncentroid)]
+        for x in X:
+            n = int(x[0])
+            lst[n] = np.append(lst[n], [x])
+        lst = [a.reshape(-1, 4) for a in lst]
+        return lst
 
     def display_centroid_metadata(self, X: np.ndarray) -> None:
         counts = [0 for _ in range(self.ncentroid)]
@@ -137,12 +140,29 @@ def main() -> None:
     print(f'{file=}, {k=}, {max_iter=}')
     with CsvReader(file, header=True, skip_top=1) as f:
         new_data = np.array([arr for arr in f.getdata()], dtype=float)
+        header = f.getheader()
         print(f'{new_data = }')
     kmeans = KmeansClustering(ncentroid=k, max_iter=max_iter)
     kmeans.fit(new_data)
     kmeans.display_centroids()
     kmeans.display_centroid_metadata(new_data)
-    kmeans.predict(new_data)
+    # kmeans.predict(new_data)
+
+    # print(f'{new_data[:,1] = }')
+    combinations = [(1, 2), (1, 3), (2, 3)]
+    citizens = kmeans.get_citizens(new_data)
+    plt.close('all')
+    colours = ['ro', 'bo', 'go', 'yo']
+
+    fig = plt.figure()
+    ax = plt.axes(projection='3d')
+    xline, yline, zline = new_data[:, 1], new_data[:, 2], new_data[:, 3]
+    ax.scatter3D(xline, yline, zline, 'gray')
+    ax.set_xlabel(header[1])
+    ax.set_ylabel(header[2])
+    ax.set_zlabel(header[3])
+    print(header)
+    # plt.show()
 
 
 if __name__ == '__main__':
