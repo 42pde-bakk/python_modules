@@ -15,13 +15,13 @@ class Recipe:
         assert self.name, 'Name cannot be empty'
         assert isinstance(self.cooking_lvl, int), 'Cooking lvl has to be type int'
         assert 1 <= self.cooking_lvl <= 5, "Cooking lvl has to be between 1 and 5"
-        assert isinstance(self.cooking_time, int)
-        assert self.cooking_time > 0
-        assert isinstance(self.ingredients, list) and self.ingredients
-        assert all(isinstance(ingr, str) for ingr in self.ingredients)
-        assert isinstance(self.description, str)
-        assert isinstance(self.recipe_type, str)
-        assert self.recipe_type in Recipe.ALLOWED_RECIPE_TYPES
+        assert isinstance(self.cooking_time, int), 'Cooking time has to be an integer'
+        assert self.cooking_time > 0, 'Cooking time has to be a positive integer'
+        assert isinstance(self.ingredients, list) and self.ingredients, 'Invalid ingredient list'
+        assert all(isinstance(ingr, str) for ingr in self.ingredients), 'Invalid ingredient in list'
+        assert isinstance(self.description, str), 'Description ought to be a string'
+        assert isinstance(self.recipe_type, str), 'Recipe type ought to be a string'
+        assert self.recipe_type in Recipe.ALLOWED_RECIPE_TYPES, 'Recipe type invalid'
 
     def __str__(self):
         """Return the string to print with the recipe info"""
