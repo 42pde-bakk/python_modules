@@ -22,7 +22,7 @@ def generator(s: str, sep=' ', option=None) -> str | None:
     if not isinstance(s, str):
         print(f'ERROR', file=sys.stderr)
         return None
-    arr = s.split(sep)
+    arr = [word for word in s.split(sep) if word]  # Remove empty strings
     if option:
         if option == 'shuffle':
             arr = randomize_array(arr)
@@ -38,6 +38,10 @@ def generator(s: str, sep=' ', option=None) -> str | None:
 
 
 if __name__ == '__main__':
-    for arg in sys.argv[1:]:
-        for word in generator(arg, ' '):
+    if len(sys.argv) < 2:
+        print('Please give me some input to put through the generator', file=sys.stderr)
+    else:
+        string = sys.argv[1]
+        option = sys.argv[2] if len(sys.argv) == 3 else None
+        for word in generator(string, ' ', option):
             print(f'{word = }')

@@ -2,7 +2,6 @@ class Account(object):
     ID_COUNT = 1
 
     def __init__(self, name, **kwargs):
-        print(f'{kwargs=}')
         self.__dict__.update(kwargs)
         self.id = self.ID_COUNT
         Account.ID_COUNT += 1
@@ -125,7 +124,6 @@ class Bank:
             setattr(account, 'zip', 75017)
         if len(dir(account)) % 2 == 0:
             setattr(account, 'super_secret_dummy_var', '#Vela')
-        print(f'{account.is_corrupted() = }')
         return not account.is_corrupted()
 
 
