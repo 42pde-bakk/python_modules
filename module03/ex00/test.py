@@ -1,9 +1,10 @@
-import numpy as np
 from NumPyCreator import NumPyCreator
 
 
+npc = NumPyCreator()
+
+
 def main():
-    npc = NumPyCreator()
     print(f"{npc.from_list([[1, 2, 3], [6, 3, 4]], dtype=object)=}\n")
 
     print(f"{npc.from_list([[1, 2, 3], [6, 4]], dtype=object)=}\n")
