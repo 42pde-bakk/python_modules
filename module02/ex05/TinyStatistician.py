@@ -14,7 +14,6 @@ class TinyStatistician:
         if x is None or length == 0:
             return None
         sorted_lst = sorted(x)
-        print(f'median={sorted_lst=}')
         if length % 2 == 1:
             middle_idx = (length - 1) // 2
             return float(sorted_lst[middle_idx])
@@ -28,15 +27,12 @@ class TinyStatistician:
         if not x:
             return None
         sorted_x = sorted(x)
-        print(f'{sorted_x=}')
         length = len(x)
         middle_index = length // 2
         if length % 2 == 1:
             lst_a, lst_b = sorted_x[:middle_index + 1], sorted_x[middle_index:]
         else:
             lst_a, lst_b = sorted_x[:middle_index], sorted_x[middle_index:]
-        print(f'{lst_a=}')
-        print(f'{lst_b=}')
         return [TinyStatistician.median(lst_a), TinyStatistician.median(lst_b)]
 
     @staticmethod

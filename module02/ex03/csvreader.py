@@ -8,10 +8,8 @@ class CsvReader:
         self.lines = list()
         self.data = list()
         self.f = None
-        print(f'done with init')
 
     def __enter__(self):
-        print(f'in enter')
         try:
             self.f = open(self.filename, 'r')
         except FileNotFoundError:
