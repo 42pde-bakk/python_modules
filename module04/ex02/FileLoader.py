@@ -14,7 +14,10 @@ class FileLoader:
             return None
 
     def display(self, df: pd.DataFrame, n: int) -> None:
-        if not isinstance(df, pd.DataFrame) or not isinstance(n, int) or n <= 0:
+        if not isinstance(df, pd.DataFrame) or not isinstance(n, int):
             print('ERROR. Giving wrong values to Fileloader.display')
             return
-        print(df.head(n))
+        if n < 0:
+            print(df.tail(-n))
+        else:
+            print(df.head(n))
