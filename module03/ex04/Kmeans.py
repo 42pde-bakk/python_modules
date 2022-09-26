@@ -87,9 +87,6 @@ class KmeansClustering:
         """
         rng = np.random.default_rng()
         self.centroids = rng.choice(X, size=self.ncentroid, replace=False, axis=0)
-        # self.centroids = np.random.choice(X, size=self.ncentroid, replace=False)
-        print(f'{self.centroids = }')
-        print(f'{X.shape = }')
         for _ in range(self.max_iter):
             if not self.__assignment_step(X):
                 break
