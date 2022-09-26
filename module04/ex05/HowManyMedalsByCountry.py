@@ -14,6 +14,7 @@ def how_many_medals_by_country(df: pd.DataFrame, country: str) -> dict[str, dict
     medals = df.loc[(df['Team'] == country) & (df['Medal'].notna())]
     team_medals = medals.loc[medals['Sport'].isin(TEAM_SPORTS)]
     not_team_medals = medals.loc[~medals['Sport'].isin(TEAM_SPORTS)]
+    # medals = pd.concat([team_medals, not_team_medals])
     men = team_medals.loc[team_medals['Sex'] == 'M'].drop_duplicates(['Year', 'Event'])
     women = team_medals.loc[team_medals['Sex'] == 'F'].drop_duplicates(['Year', 'Event'])
     medals = pd.concat([men, women, not_team_medals])
