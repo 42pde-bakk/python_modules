@@ -5,7 +5,7 @@ class ScrapBooker:
     def __init__(self):
         pass
 
-    def crop(self, array: np.ndarray, dim: tuple[int, int], position: tuple[int, int]) -> np.ndarray | None:
+    def crop(self, array: np.ndarray, dim: tuple[int, int], position: tuple[int, int] = (0, 0)) -> np.ndarray | None:
         """
         Crops the image as a rectangle via dim arguments (being the new height
         and width of the image) from the coordinates given by position arguments.
