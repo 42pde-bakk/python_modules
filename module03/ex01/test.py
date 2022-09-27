@@ -1,5 +1,6 @@
 from ImageProcessor import ImageProcessor
 from PIL import UnidentifiedImageError
+import os
 
 
 def test_invalid_file(imp: ImageProcessor, path: str, error) -> None:
@@ -12,9 +13,14 @@ def test_invalid_file(imp: ImageProcessor, path: str, error) -> None:
 
 
 def main() -> None:
+    empty_file_path = 'empty_file.png'
     imp = ImageProcessor()
     test_invalid_file(imp, 'non_existing_file.png', FileNotFoundError)
-    test_invalid_file(imp, 'empty_file.png', UnidentifiedImageError)
+    if not os.path.exists(empty_file_path):
+        with open(empty_file_path, 'w') as _:
+            # Just create an empty file if it doesn't already exist
+            pass
+    test_invalid_file(imp, empty_file_path, UnidentifiedImageError)
 
     arr = imp.load('../resources/42AI.png')
     print(f'{arr=}')
