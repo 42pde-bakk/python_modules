@@ -167,8 +167,7 @@ def main() -> None:
     ax.set_xlabel(header[1])
     ax.set_ylabel(header[2])
     ax.set_zlabel(header[3])
-    print(header)
-    # plt.show()
+    plt.show()
 
 
 if __name__ == '__main__':
