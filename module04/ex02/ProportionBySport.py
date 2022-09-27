@@ -8,6 +8,7 @@ def proportion_by_sport(df: pd.DataFrame, year: int, sport: str, gender: str):
     sub = total.loc[df['Sport'] == sport]
     # total = total.drop_duplicates(subset=['Name'])
     # sub = sub.drop_duplicates(subset=['Name'])
-    if len(sub) == 0:
+    if sub.shape[0] == 0:
         return 0.0
-    return len(sub) / len(total)
+    # I suspect len(sub) would return sub.shape[0] but not sure
+    return sub.shape[0] / total.shape[0]
