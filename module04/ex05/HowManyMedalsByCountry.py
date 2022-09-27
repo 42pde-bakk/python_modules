@@ -12,12 +12,9 @@ def how_many_medals_by_country(df: pd.DataFrame, country: str) -> dict[str, dict
     if not (isinstance(df, pd.DataFrame) and isinstance(country, str)):
         return {}
     medals = df.loc[(df['Team'] == country) & (df['Medal'].notna())]
-    team_medals = medals.loc[medals['Sport'].isin(TEAM_SPORTS)]
+    team_medals = medals.loc[medals['Sport'].isin(TEAM_SPORTS)].drop_duplicates(['Year', 'Event', 'Sport', 'Medal', 'Team'])
     not_team_medals = medals.loc[~medals['Sport'].isin(TEAM_SPORTS)]
-    # medals = pd.concat([team_medals, not_team_medals])
-    men = team_medals.loc[team_medals['Sex'] == 'M'].drop_duplicates(['Year', 'Event'])
-    women = team_medals.loc[team_medals['Sex'] == 'F'].drop_duplicates(['Year', 'Event'])
-    medals = pd.concat([men, women, not_team_medals])
+    medals = pd.concat([team_medals, not_team_medals])
     d = {}
     for idx, row in medals.iterrows():
         year = row['Year']
