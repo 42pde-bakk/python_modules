@@ -11,6 +11,8 @@ def main():
     print(sp.when('Athina'))
     print(sp.when('Paris'))
 
+    print(sp.when('Amsterdam'))
+
 
 if __name__ == '__main__':
     main()
