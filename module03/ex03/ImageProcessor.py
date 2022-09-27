@@ -1,5 +1,6 @@
 import numpy as np
 from PIL import Image
+import matplotlib.pyplot as plt
 
 
 class ImageProcessor:
@@ -9,7 +10,10 @@ class ImageProcessor:
     def load(self, path: str) -> np.ndarray:
         im_frame = Image.open(path)
         print(f'Loading image of dimensions {im_frame.width} x {im_frame.height}')
-        return np.array(im_frame)
+        return np.asarray(im_frame)
 
     def display(self, array: np.ndarray) -> None:
-        Image.fromarray(array).show()
+        image = Image.fromarray(array)
+        plt.imshow(image)
+        plt.show()
+        # Image.fromarray(array).show()

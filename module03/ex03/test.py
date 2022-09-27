@@ -14,7 +14,7 @@ def main() -> None:
     imp.display(cf.to_green(arr))
     imp.display(cf.to_red(arr))
     imp.display(cf.to_blue(arr))
-    # imp.display(cf.to_celluloid(arr))
+    imp.display(cf.to_celluloid(arr))
     imp.display(cf.to_grayscale(arr, 'm'))
     imp.display(cf.to_grayscale(arr, 'weight', weights=[0.2, 0.3, 0.5]))
     arr2 = imp.load('../resources/Toon-shader.jpg')
