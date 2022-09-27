@@ -15,7 +15,7 @@ class KmeansClustering:
     def __init__(self, max_iter=20, ncentroid=5):
         self.ncentroid = ncentroid  # number of centroids
         self.max_iter = max_iter  # number of max iterations to update the centroids
-        self.centroids = []  # values of the centroids
+        self.centroids = np.ndarray  # values of the centroids
 
     def __get_closest_centroid(self, x: np.ndarray, get_index: bool = False) -> np.ndarray | int:
         centroids_dists = [calc_dist(x, centroid) for centroid in self.centroids]
@@ -52,9 +52,27 @@ class KmeansClustering:
             avgs = self.__get_avgs(X, i)
             self.centroids[i] = avgs
 
-    def display_centroids(self) -> None:
+    def display_centroids(self, X: np.ndarray) -> None:
+        counts = [0 for _ in range(self.ncentroid)]
+        for x in X:
+            counts[self.__get_closest_centroid(x, get_index=True)] += 1
+        areas_nb = {i: '' for i in range(4)}
+        if len(self.centroids) == 4:
+            centroids: np.ndarray = self.centroids.copy()
+            the_belt_idx = int(centroids[centroids[:, 1].argmax()][0])
+            centroids = np.delete(centroids, the_belt_idx, axis=0)
+            areas_nb[the_belt_idx] = 'The Belt'
+            for venus, earth, mars in [(0, 1, 2), (0, 2, 1), (1, 0, 2), (1, 2, 0), (2, 0, 1), (2, 1, 0)]:
+                if centroids[venus][2] < centroids[earth][2] and centroids[mars][1] > centroids[earth][1]:
+                    areas_nb[int(centroids[venus][0])] = 'Venus'
+                    areas_nb[int(centroids[earth][0])] = 'Earth'
+                    areas_nb[int(centroids[mars][0])] = 'Mars'
+                    break
+
         for i, centroid in enumerate(self.centroids):
-            print(f'centroid #{i} is located at {centroid[1:]}')
+            print(f'centroid #{i} is located at {centroid[1:]} with {counts[i]} individuals associated to it.', end='')
+            if len(self.centroids) == 4:
+                print(' ' + areas_nb[i])
 
     def get_citizens(self, X: np.ndarray) -> list[np.ndarray]:
         lst = [np.array([[]], dtype=float) for _ in range(self.ncentroid)]
@@ -63,13 +81,6 @@ class KmeansClustering:
             lst[n] = np.append(lst[n], [x])
         lst = [a.reshape(-1, 4) for a in lst]
         return lst
-
-    def display_centroid_metadata(self, X: np.ndarray) -> None:
-        counts = [0 for _ in range(self.ncentroid)]
-        for x in X:
-            counts[self.__get_closest_centroid(x, get_index=True)] += 1
-        for i, centroid in enumerate(self.centroids):
-            print(f'Centroid at {centroid[1:]} has {counts[i]} individuals associated to it.')
 
     def fit(self, X: np.ndarray) -> None:
         """
@@ -116,7 +127,6 @@ def get_usage() -> str:
 
 def extract_arg(full_arg: str, prefix: str) -> str | None:
     if full_arg[:len(prefix)] != prefix:
-        print(f'checked {full_arg[:len(prefix)]}')
         return None
     return full_arg[len(prefix):]
 
@@ -138,11 +148,10 @@ def main() -> None:
     with CsvReader(file, header=True, skip_top=1) as f:
         new_data = np.array([arr for arr in f.getdata()], dtype=float)
         header = f.getheader()
-        print(f'{new_data = }')
+        # print(f'{new_data = }')
     kmeans = KmeansClustering(ncentroid=k, max_iter=max_iter)
     kmeans.fit(new_data)
-    kmeans.display_centroids()
-    kmeans.display_centroid_metadata(new_data)
+    kmeans.display_centroids(new_data)
     # kmeans.predict(new_data)
 
     # print(f'{new_data[:,1] = }')
