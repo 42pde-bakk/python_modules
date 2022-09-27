@@ -7,6 +7,7 @@ def main():
     data = loader.load('../data/athlete_events.csv')
     res = how_many_medals(data, 'Kjetil Andr Aamodt')
     print(res)
+    print(how_many_medals(data, 'Francina Elsje "Fanny" Blankers-Koen'))
 
 
 if __name__ == '__main__':
